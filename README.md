@@ -1,5 +1,7 @@
 # 小红书蹲蹲自动回复助手 (XHS DunDun Reply Bot)
 
+<img src="static/xhs_dundun_reply.png" alt="xhs_dundun_reply" height="336" width="792">
+
 这是一个基于 Python 和 Playwright 开发的小红书自动评论回复工具。它可以遍历指定帖子的评论区，根据预设的关键词（包括文本和 Emoji 表情）自动进行回复。
 
 本项目旨在帮助博主或运营人员更高效地与粉丝互动，特别是针对 "蹲后续"、"求教程" 等常见评论进行自动化响应。
@@ -74,7 +76,7 @@ xhs_dundun_reply/
 ├── config.py           # 配置文件 (核心)
 ├── main.py             # 主程序入口
 ├── requirements.txt    # 项目依赖
-├── browser_data/       # [自动生成] 浏览器缓存与登录信息 (请勿提交到 Git)
+├── browser_data/       # [自动生成] 浏览器缓存与登录信息
 ├── reply_data/         # [自动生成] 已处理的评论记录
 ├── logs/               # [自动生成] 运行日志
 └── emoji_extraction/   # Emoji 处理模块
@@ -100,8 +102,8 @@ xhs_dundun_reply/
 3. thank you~~
 
 <div align="center">
-  <img src="./author/wx_pay.png" width="400px" alt="微信赞赏码"> 
-  <img src="./author/zfb_pay.jpg" width="400px" alt="支付宝收款码">
+  <img src="./static/wx_pay.png" width="400px" alt="微信赞赏码"> 
+  <img src="./static/zfb_pay.jpg" width="400px" alt="支付宝收款码">
 </div>
 
 
@@ -113,7 +115,3 @@ xhs_dundun_reply/
    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=cv-cat/xhs_dundun_reply&type=Date" />
  </picture>
 </a>
-
-## 📄 License
-
-MIT
