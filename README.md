@@ -94,6 +94,26 @@ xhs_dundun_reply/
 *   严禁使用本工具进行垃圾信息轰炸、骚扰他人或违反小红书平台规则的行为。
 *   使用本工具产生的任何账号风险（如禁言、封号）由使用者自行承担，开发者不承担任何责任。
 
+## 🧸额外说明
+1. 感谢star⭐和follow📰！
+2. 感谢赞助！如果此项目对您有帮助，请作者喝一杯奶茶~~ （开心一整天😊😊）
+3. thank you~~
+
+<div align="center">
+  <img src="./author/wx_pay.png" width="400px" alt="微信赞赏码"> 
+  <img src="./author/zfb_pay.jpg" width="400px" alt="支付宝收款码">
+</div>
+
+
+## 📈 Star 趋势
+<a href="https://www.star-history.com/#cv-cat/xhs_dundun_reply&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=cv-cat/xhs_dundun_reply&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=cv-cat/xhs_dundun_reply&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=cv-cat/xhs_dundun_reply&type=Date" />
+ </picture>
+</a>
+
 ## 📄 License
 
 MIT
