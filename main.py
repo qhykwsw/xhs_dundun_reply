@@ -11,6 +11,7 @@ import logging
 import re
 from logging.handlers import RotatingFileHandler
 from emoji_extraction.emoji_extraction import EmojiExtraction
+from tqdm import tqdm
 
 # -------------------------------------------------------------------------
 # 日志配置
@@ -603,6 +604,8 @@ class XHSCommentReply:
         max_scroll_attempts = self.config.max_scroll_attempts
         no_new_comments_count = 0  # 连续没有新评论的次数
         max_no_new_comments = self.config.max_no_new_comments
+        # 记录已遍历过的顶级评论区索引，避免重复遍历
+        last_processed_parent_index = 0
 
         while scroll_attempts < max_scroll_attempts and no_new_comments_count < max_no_new_comments:
             scroll_attempts += 1
@@ -616,110 +619,131 @@ class XHSCommentReply:
 
             # 获取当前可见的顶级评论区
             parent_comments = await self.page.locator("div.parent-comment").all()
-            logger.info(f"当前找到 {len(parent_comments)} 个可见的顶级评论区")
+            current_parent_count = len(parent_comments)
+            logger.info(f"当前找到 {current_parent_count} 个可见的顶级评论区 (新增: {current_parent_count - last_processed_parent_index})")
 
             new_comments_found = False
 
-            for index, parent_element in enumerate(parent_comments):
-                try:
-                    # 生成父评论的唯一标识
-                    parent_bounds = await parent_element.bounding_box()
-                    if not parent_bounds:
-                        continue
-
-                    # 使用位置和内容的组合作为唯一标识
-                    l1_comment = parent_element.locator("div.comment-item:not(.comment-item-sub)").first
+            # 只处理新出现的顶级评论区（从上次处理的位置开始）
+            if current_parent_count > last_processed_parent_index:
+                new_parent_comments = parent_comments[last_processed_parent_index:]
+                for parent_element in tqdm(new_parent_comments, desc="处理顶级评论区"):
                     try:
-                        comment_id = await l1_comment.get_attribute('id')
-                        if comment_id:
-                            parent_key = comment_id
-                        else:
-                            # 如果没有id，使用位置作为备选
-                            parent_key = f"parent_{int(parent_bounds['y'])}_{int(parent_bounds['x'])}"
-                    except:
-                        parent_key = f"parent_{int(parent_bounds['y'])}_{int(parent_bounds['x'])}"
-
-                    if parent_key in processed_parent_keys:
-                        continue
-
-                    new_comments_found = True
-                    current_l1_index += 1
-                    logger.info("-" * 30)
-                    logger.info(f"发现L1评论 #{current_l1_index} (key: {parent_key})")
-
-                    # 检查是否需要开始处理
-                    if not start_processing:
-                        # 检查索引条件
-                        if (self.config.start_from_l1_index and
-                            current_l1_index >= self.config.start_from_l1_index):
-                            start_processing = True
-                            logger.info(f"达到起始索引 #{self.config.start_from_l1_index}，开始处理")
-
-                        # 检查comment_id条件
-                        elif (self.config.start_from_comment_id and comment_id and
-                              comment_id == self.config.start_from_comment_id):
-                            start_processing = True
-                            logger.info(f"找到起始comment_id '{self.config.start_from_comment_id}'，开始处理")
-
-                        if not start_processing:
-                            logger.info(f"跳过L1评论 #{current_l1_index} (未达到起始条件)")
-                            # 即使跳过，也要滚动到该元素，确保页面能够正确加载后续内容
-                            await parent_element.scroll_into_view_if_needed()
-                            await asyncio.sleep(random.uniform(self.config.step_delay_min, self.config.step_delay_max))
-                            processed_parent_keys.add(parent_key)
+                        # 生成父评论的唯一标识
+                        parent_bounds = await parent_element.bounding_box()
+                        if not parent_bounds:
                             continue
 
-                    logger.info(f"处理L1评论 #{current_l1_index} (key: {parent_key})")
-
-                    # 滚动到当前评论区
-                    await parent_element.scroll_into_view_if_needed()
-                    await asyncio.sleep(random.uniform(self.config.step_delay_min, self.config.step_delay_max))
-
-                    # 处理Level 1评论
-                    processed_l1_ids = set()
-                    await self.process_single_comment(l1_comment, "Level 1", processed_l1_ids)
-
-                    # 处理Level 2评论（展开逻辑）
-                    processed_l2_ids = set()
-                    expand_clicks = 0
-
-                    while expand_clicks < self.config.max_expand_clicks:
-                        logger.info(f"L2 处理/展开循环 #{expand_clicks + 1}")
-
-                        # 处理当前可见的L2评论
-                        l2_comments = await parent_element.locator("div.comment-item-sub").all()
-
-                        for sub_comment in l2_comments:
-                            await self.process_single_comment(sub_comment, "Level 2", processed_l2_ids)
-
-                        # 查找展开按钮
+                        # 使用位置和内容的组合作为唯一标识
+                        l1_comment = parent_element.locator("div.comment-item:not(.comment-item-sub)").first
                         try:
-                            expand_button = parent_element.locator(
-                                "div.reply-container div.show-more:has-text('展开')"
-                            ).first
-
-                            if await expand_button.is_visible(timeout=self.config.short_timeout * 1000):
-                                logger.info("发现'展开'按钮，尝试点击...")
-                                await expand_button.click()
-                                expand_clicks += 1
-                                logger.info(f"'展开'已点击 ({expand_clicks}/{self.config.max_expand_clicks})")
-                                await asyncio.sleep(random.uniform(self.config.step_delay_min, self.config.step_delay_max))
+                            comment_id = await l1_comment.get_attribute('id')
+                            if comment_id:
+                                parent_key = comment_id
                             else:
-                                logger.info("未找到'展开'按钮，结束L2展开")
+                                # 如果没有id，使用位置作为备选
+                                parent_key = f"parent_{int(parent_bounds['y'])}_{int(parent_bounds['x'])}"
+                        except:
+                            parent_key = f"parent_{int(parent_bounds['y'])}_{int(parent_bounds['x'])}"
+
+                        if parent_key in processed_parent_keys:
+                            continue
+
+                        new_comments_found = True
+                        current_l1_index += 1
+                        logger.info("-" * 30)
+                        logger.info(f"发现L1评论 #{current_l1_index} (key: {parent_key})")
+
+                        # 检查是否需要开始处理
+                        if not start_processing:
+                            # 检查索引条件
+                            if (self.config.start_from_l1_index and
+                                current_l1_index >= self.config.start_from_l1_index):
+                                start_processing = True
+                                logger.info(f"达到起始索引 #{self.config.start_from_l1_index}，开始处理")
+
+                            # 检查comment_id条件
+                            elif (self.config.start_from_comment_id and comment_id and
+                                  comment_id == self.config.start_from_comment_id):
+                                start_processing = True
+                                logger.info(f"找到起始comment_id '{self.config.start_from_comment_id}'，开始处理")
+
+                            if not start_processing:
+                                logger.info(f"跳过L1评论 #{current_l1_index} (未达到起始条件)")
+                                # 即使跳过，也要滚动到该元素，确保页面能够正确加载后续内容
+                                await parent_element.scroll_into_view_if_needed()
+                                await asyncio.sleep(random.uniform(self.config.step_delay_min, self.config.step_delay_max))
+                                processed_parent_keys.add(parent_key)
+                                continue
+
+                        logger.info(f"处理L1评论 #{current_l1_index} (key: {parent_key})")
+
+                        # 滚动到当前评论区
+                        await parent_element.scroll_into_view_if_needed()
+                        await asyncio.sleep(random.uniform(self.config.step_delay_min, self.config.step_delay_max))
+
+                        # 处理Level 1评论
+                        processed_l1_ids = set()
+                        await self.process_single_comment(l1_comment, "Level 1", processed_l1_ids)
+
+                        # 处理Level 2评论（展开逻辑）
+                        processed_l2_ids = set()
+                        expand_clicks = 0
+                        # 记录已遍历过的L2评论索引，避免重复遍历
+                        last_processed_l2_index = 0
+
+                        while expand_clicks < self.config.max_expand_clicks:
+                            # 每轮循环之间添加等待时间（第一轮除外）
+                            if expand_clicks > 0:
+                                await asyncio.sleep(random.uniform(self.config.step_delay_min, self.config.step_delay_max))
+
+                            logger.info(f"L2 处理/展开循环 #{expand_clicks + 1}")
+
+                            # 处理当前可见的L2评论
+                            l2_comments = await parent_element.locator("div.comment-item-sub").all()
+                            current_l2_count = len(l2_comments)
+
+                            # 只处理新出现的L2评论（从上次处理的位置开始）
+                            if current_l2_count > last_processed_l2_index:
+                                logger.debug(f"发现 {current_l2_count - last_processed_l2_index} 条新L2评论 (总数: {current_l2_count})")
+                                for i in range(last_processed_l2_index, current_l2_count):
+                                    sub_comment = l2_comments[i]
+                                    await self.process_single_comment(sub_comment, "Level 2", processed_l2_ids)
+                                last_processed_l2_index = current_l2_count
+                            else:
+                                logger.debug(f"没有新的L2评论需要处理 (当前总数: {current_l2_count})")
+
+                            # 查找展开按钮
+                            try:
+                                expand_button = parent_element.locator(
+                                    "div.reply-container div.show-more:has-text('展开')"
+                                ).first
+
+                                if await expand_button.is_visible(timeout=self.config.short_timeout * 1000):
+                                    logger.info("发现'展开'按钮，尝试点击...")
+                                    await expand_button.click()
+                                    expand_clicks += 1
+                                    logger.info(f"'展开'已点击 ({expand_clicks}/{self.config.max_expand_clicks})")
+                                    await asyncio.sleep(random.uniform(self.config.step_delay_min, self.config.step_delay_max))
+                                else:
+                                    logger.info("未找到'展开'按钮，结束L2展开")
+                                    break
+
+                            except Exception:
+                                logger.info("展开按钮不可用，结束L2展开")
                                 break
 
-                        except Exception:
-                            logger.info("展开按钮不可用，结束L2展开")
-                            break
+                        if expand_clicks >= self.config.max_expand_clicks:
+                            logger.info(f"达到最大'展开'点击次数 ({self.config.max_expand_clicks})")
 
-                    if expand_clicks >= self.config.max_expand_clicks:
-                        logger.info(f"达到最大'展开'点击次数 ({self.config.max_expand_clicks})")
+                        processed_parent_keys.add(parent_key)
 
-                    processed_parent_keys.add(parent_key)
+                    except Exception as e:
+                        logger.error(f"❌ 处理顶级评论区时发生错误: {e}")
+                        continue
 
-                except Exception as e:
-                    logger.error(f"❌ 处理顶级评论区时发生错误: {e}")
-                    continue
+            # for 循环结束后，更新已处理的顶级评论区索引
+            last_processed_parent_index = current_parent_count
 
             # 更新无新评论计数器
             if new_comments_found:
