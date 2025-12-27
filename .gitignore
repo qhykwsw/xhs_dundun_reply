@@ -168,3 +168,4 @@ main/trained_models_cnn_mps/*
 browser_data/
 reply_data/
 logs/
+settings.json

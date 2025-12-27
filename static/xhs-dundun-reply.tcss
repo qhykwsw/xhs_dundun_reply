@@ -1,0 +1,137 @@
+/* XHS DunDun Reply TUI 样式表 */
+
+/* 按钮样式 */
+Button {
+    width: 1fr;
+    margin: 0 1;
+}
+
+/* 标签样式 */
+Label, Link {
+    width: 100%;
+    content-align-horizontal: center;
+    content-align-vertical: middle;
+}
+
+Label.title {
+    text-style: bold;
+    padding: 1;
+}
+
+Label.center-label {
+    content-align-horizontal: center;
+}
+
+Label.prompt {
+    padding: 1;
+    color: $accent;
+}
+
+Label.params {
+    margin: 1 0 0 0;
+    color: $primary;
+    content-align-horizontal: left;
+}
+
+Label.section-title {
+    margin: 2 0 1 0;
+    color: $warning;
+    text-style: bold;
+    content-align-horizontal: center;
+}
+
+Link {
+    color: $accent;
+}
+
+/* 输入框样式 */
+Input {
+    margin: 0 1;
+}
+
+/* 复选框样式 */
+Checkbox {
+    margin: 1 2;
+}
+
+/* 布局容器 */
+.top-block {
+    height: auto;
+    padding: 1;
+}
+
+.bottom-block {
+    height: 1fr;
+    padding: 1;
+}
+
+.control-row {
+    layout: horizontal;
+    height: auto;
+    margin: 1 0;
+    align: center middle;
+}
+
+.control-row > Checkbox {
+    width: auto;
+    margin: 0 2;
+}
+
+.control-row > Button {
+    width: 1fr;
+}
+
+.bottom-row {
+    layout: horizontal;
+    height: auto;
+    margin: 1 0;
+    dock: bottom;
+}
+
+/* RichLog 日志区域 */
+RichLog {
+    height: 1fr;
+    border: solid $primary;
+    margin: 1;
+}
+
+/* 设置页面样式 */
+.settings-container {
+    padding: 1;
+}
+
+.settings-buttons {
+    layout: horizontal;
+    height: auto;
+    margin: 1 0;
+}
+
+.dual-input {
+    layout: horizontal;
+    height: auto;
+}
+
+.dual-input > Input {
+    width: 1fr;
+}
+
+.checkbox-row {
+    layout: horizontal;
+    height: auto;
+    margin: 1 0;
+}
+
+/* 水平布局 */
+Horizontal {
+    height: auto;
+}
+
+/* 垂直布局 */
+Vertical {
+    height: 1fr;
+}
+
+/* ScrollableContainer */
+ScrollableContainer {
+    scrollbar-gutter: stable;
+}
