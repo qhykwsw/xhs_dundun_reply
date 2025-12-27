@@ -32,36 +32,19 @@
     *   支持从指定的位置（第 N 个评论或指定 Comment ID）开始处理，避免重复工作。
 *   **灵活配置**：所有参数均可通过图形界面或 `settings.json` 配置文件管理。
 
-## 🛠️ 环境依赖
+## 🪟 关于终端
 
-*   Python 3.10 或更高版本
-*   Playwright
-*   Textual (TUI 框架)
-*   pyperclip (剪贴板支持)
+⭐ 推荐使用 [Windows 终端](https://learn.microsoft.com/zh-cn/windows/terminal/install) （Windows 11 默认终端）运行程序以便获得最佳显示效果！
 
-## 🚀 快速开始
+## 🥣 使用方法
 
-### 1. 克隆项目
+如果仅需快速使用本工具，建议选择 **程序运行**；如果需要进行二次开发或自定义修改，建议选择 **源码运行**！
 
-```bash
-git clone https://github.com/qhykwsw/xhs_dundun_reply.git
-cd xhs_dundun_reply
-```
+### 🖱 程序运行
 
-### 2. 安装依赖
+#### 1. 下载程序
 
-```bash
-pip install -r requirements.txt
-playwright install chromium
-```
-
-### 3. 运行程序
-
-```bash
-python main.py
-```
-
-程序会启动一个 **TUI 图形界面**，你可以：
+⭐ Windows 10 及以上用户可前往 [Releases](https://github.com/cv-cat/xhs_dundun_reply/releases/latest) 下载程序压缩包，解压后打开程序文件夹，双击运行 `XHS-DunDun-Reply.exe` 即可使用。程序会启动一个 **TUI 图形界面**，你可以：
 1. 在输入框中粘贴小红书帖子链接（或点击"读取剪贴板"自动填充）
 2. 勾选"无头模式"（可选，勾选后浏览器在后台运行）
 3. 点击"开始回复"按钮
@@ -69,12 +52,7 @@ python main.py
 
 <img src="static/main_interface.png" alt="main_interface" width="792">
 
-### 4. 首次登录
-
-首次运行时，程序会自动打开 Chromium 浏览器。请在 **60秒内** 使用小红书 App 扫码登录。
-登录成功后，程序会自动保存 Session 到 `browser_data` 目录，下次运行时无需再次扫码。
-
-### 5. 修改配置
+#### 2. 修改配置
 
 点击界面底部的"程序设置"按钮，可以修改：
 *   关键词列表（包含匹配、精确匹配、Emoji匹配）
@@ -84,6 +62,42 @@ python main.py
 *   断点续传配置
 
 <img src="static/settings.png" alt="settings" width="792">
+
+#### 3. 首次登录
+
+首次运行时，程序会自动打开 Chromium 浏览器。请在 **60秒内** 使用小红书 App 扫码登录。
+登录成功后，程序会自动保存 Session 到 `browser_data` 目录，下次运行时无需再次扫码。
+
+### ⌨️ 源码运行
+
+#### 环境依赖
+
+*   Python 3.10 或更高版本
+*   Playwright
+*   Textual (TUI 框架)
+*   pyperclip (剪贴板支持)
+
+#### 安装步骤
+
+##### 1. 克隆项目
+
+```bash
+git clone https://github.com/cv-cat/xhs_dundun_reply.git
+cd xhs_dundun_reply
+```
+
+##### 2. 安装依赖
+
+```bash
+pip install -r requirements.txt
+playwright install chromium
+```
+
+##### 3. 运行程序
+
+```bash
+python main.py
+```
 
 ## 📁 目录结构
 

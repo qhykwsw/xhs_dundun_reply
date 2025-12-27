@@ -175,3 +175,9 @@ build/
 dist/
 *.spec
 build.ps1
+
+# 发行文件
+RELEASE_GUIDE.md
+RELEASE_NOTES.md
+release.ps1
+*.zip
