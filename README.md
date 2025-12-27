@@ -1,19 +1,20 @@
 # 小红书蹲蹲自动回复助手 (XHS DunDun Reply Bot)
 
-<img src="static/xhs_dundun_reply.png" alt="xhs_dundun_reply" height="336" width="792">
+<img src="static/xhs_dundun_reply.jpg" alt="xhs_dundun_reply" height="336" width="792">
 
 这是一个基于 Python 和 Playwright 开发的小红书自动评论回复工具。它可以遍历指定帖子的评论区，根据预设的关键词（包括文本和 Emoji 表情）自动进行回复。
 
-**🎉 现已支持 TUI 图形界面！** 无需手动修改代码配置，小白也能轻松使用。
+**🎉 支持 TUI 图形界面！** 无需手动修改代码配置，小白也能轻松使用。
 
 本项目旨在帮助博主或运营人员更高效地与粉丝互动，特别是针对 "蹲后续"、"求教程" 等常见评论进行自动化响应。
 
 ## ✨ 主要功能
 
-*   **TUI 图形界面**（新增！）：
-    *   友好的终端图形界面，无需修改代码
-    *   实时日志显示，直观查看运行状态
-    *   可视化配置管理，所有参数一目了然
+*   **TUI 图形界面**：
+    *   友好的终端图形界面，无需修改代码。
+    *   实时日志显示，直观查看运行状态。
+    *   可视化配置管理，所有参数一目了然。
+    *   支持剪贴板读取和快速清空输入框。
 *   **关键词匹配**：
     *   **精确匹配**：只有评论内容完全一致才触发（如 "我"）。
     *   **包含匹配**：只要评论中包含关键词就触发（如 "蹲"、"教程"）。
@@ -36,6 +37,7 @@
 *   Python 3.10 或更高版本
 *   Playwright
 *   Textual (TUI 框架)
+*   pyperclip (剪贴板支持)
 
 ## 🚀 快速开始
 
@@ -60,10 +62,12 @@ python main.py
 ```
 
 程序会启动一个 **TUI 图形界面**，你可以：
-1. 在输入框中粘贴小红书帖子链接
+1. 在输入框中粘贴小红书帖子链接（或点击"读取剪贴板"自动填充）
 2. 勾选"无头模式"（可选，勾选后浏览器在后台运行）
 3. 点击"开始回复"按钮
 4. 在日志区域实时查看运行状态
+
+<img src="static/main_interface.png" alt="main_interface" width="792">
 
 ### 4. 首次登录
 
@@ -78,6 +82,8 @@ python main.py
 *   各种延迟时间
 *   风控相关配置
 *   断点续传配置
+
+<img src="static/settings.png" alt="settings" width="792">
 
 ## 📁 目录结构
 
@@ -120,10 +126,18 @@ xhs_dundun_reply/
 *   严禁使用本工具进行垃圾信息轰炸、骚扰他人或违反小红书平台规则的行为。
 *   使用本工具产生的任何账号风险（如禁言、封号）由使用者自行承担，开发者不承担任何责任。
 
-## 🧸额外说明
-1. 感谢star⭐和follow📰！
-2. 感谢赞助！如果此项目对您有帮助，请作者喝一杯奶茶~~ （开心一整天😊😊）
-3. thank you~~
+## 📜 开源协议
+
+本项目基于 [GNU General Public License v3.0](LICENSE) 开源。
+
+### 🙏 致谢
+
+本项目在开发过程中参考了 [XHS-Downloader](https://github.com/JoeanAmier/XHS-Downloader) 的 TUI 界面设计理念和项目架构，特此致谢！
+
+## 🧸 额外说明
+1. 感谢 star ⭐ 和 follow 📰！
+2. 感谢赞助！如果此项目对您有帮助，请作者喝一杯奶茶~~ （开心一整天 😊😊）
+3. Thank you~~
 
 <div align="center">
   <img src="./static/wx_pay.png" width="400px" alt="微信赞赏码"> 

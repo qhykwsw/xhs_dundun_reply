@@ -3,6 +3,7 @@
 # 核心依赖
 playwright>=1.40.0
 textual>=0.50.0
+pyperclip>=1.8.0
 
 # 进度条（用于命令行模式）
 tqdm>=4.66.0

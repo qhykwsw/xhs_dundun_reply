@@ -5,16 +5,30 @@ import asyncio
 import random
 import json
 import os
+import sys
 import re
 import logging
 from datetime import datetime
 from typing import Set, Optional, Dict, Any, Callable
 from logging.handlers import RotatingFileHandler
 from playwright.async_api import async_playwright, Page, BrowserContext
+from pathlib import Path
 
 from ..module import ROOT
 
 __all__ = ["XHSCommentReply"]
+
+
+def get_browser_executable_path():
+    """获取浏览器可执行文件路径（支持打包后的环境）"""
+    # 如果是打包后的环境
+    if getattr(sys, 'frozen', False):
+        # PyInstaller 打包后的路径
+        base_path = Path(sys._MEIPASS)
+        browser_path = base_path / 'playwright_browsers' / 'chromium-1181' / 'chrome-win' / 'chrome.exe'
+        if browser_path.exists():
+            return str(browser_path)
+    return None  # 返回 None 让 Playwright 使用默认路径
 
 
 class XHSCommentReply:
@@ -181,14 +195,24 @@ class XHSCommentReply:
 
         self._log(f"使用用户数据目录: {user_data_dir}")
 
-        self.context = await self.playwright.chromium.launch_persistent_context(
-            user_data_dir=str(user_data_dir),
-            headless=False,
-            args=browser_args,
-            no_viewport=True,
-            user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            viewport=None
-        )
+        # 获取浏览器可执行文件路径（打包后需要）
+        executable_path = get_browser_executable_path()
+
+        launch_kwargs = {
+            'user_data_dir': str(user_data_dir),
+            'headless': False,
+            'args': browser_args,
+            'no_viewport': True,
+            'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'viewport': None
+        }
+
+        # 如果找到了自定义浏览器路径（打包环境），则使用它
+        if executable_path:
+            self._log(f"使用打包的浏览器: {executable_path}")
+            launch_kwargs['executable_path'] = executable_path
+
+        self.context = await self.playwright.chromium.launch_persistent_context(**launch_kwargs)
 
         # 添加反检测脚本
         await self.context.add_init_script("""

@@ -2,6 +2,7 @@
 XHS DunDun Reply TUI 首页
 """
 import asyncio
+from pyperclip import paste
 from rich.text import Text
 from textual import on, work
 from textual.app import ComposeResult
@@ -88,6 +89,8 @@ class Index(Screen):
                 Checkbox("无头模式", id="headless_checkbox", value=self.config.get("headless", False)),
                 Button("开始回复", id="start_btn", variant="success"),
                 Button("停止", id="stop_btn", variant="error"),
+                Button("读取剪贴板", id="paste_btn", variant="primary"),
+                Button("清空输入框", id="reset_btn", variant="default"),
                 classes="control-row",
             ),
             classes="top-block",
@@ -227,6 +230,25 @@ class Index(Screen):
         if self.bot:
             self.bot.stop()
             self._log_callback("正在停止任务...", "WARNING")
+
+    @on(Button.Pressed, "#paste_btn")
+    def paste_button(self):
+        """读取剪贴板"""
+        try:
+            clipboard_content = paste()
+            if clipboard_content:
+                self.url_input.value = clipboard_content
+                self._log_callback("已读取剪贴板内容", "INFO")
+            else:
+                self._log_callback("剪贴板为空", "WARNING")
+        except Exception as e:
+            self._log_callback(f"读取剪贴板失败: {e}", "ERROR")
+
+    @on(Button.Pressed, "#reset_btn")
+    def reset_button(self):
+        """清空输入框"""
+        self.url_input.value = ""
+        self._log_callback("已清空输入框", "INFO")
 
     @on(Button.Pressed, "#quit_btn")
     async def quit_app(self):
