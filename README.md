@@ -44,7 +44,7 @@
 
 #### 1. 下载程序
 
-⭐ Windows 10 及以上用户可前往 [Releases](https://github.com/cv-cat/xhs_dundun_reply/releases/latest) 下载程序压缩包，解压后打开程序文件夹，双击运行 `XHS-DunDun-Reply.exe` 即可使用。程序会启动一个 **TUI 图形界面**，你可以：
+⭐ Windows 10 及以上用户可前往 [Releases](https://github.com/qhykwsw/xhs_dundun_reply/releases/latest) 下载程序压缩包，解压后打开程序文件夹，双击运行 `XHS-DunDun-Reply.exe` 即可使用。程序会启动一个 **TUI 图形界面**，你可以：
 1. 在输入框中粘贴小红书帖子链接（或点击"读取剪贴板"自动填充）
 2. 勾选"无头模式"（可选，勾选后浏览器在后台运行）
 3. 点击"开始回复"按钮
@@ -82,7 +82,7 @@
 ##### 1. 克隆项目
 
 ```bash
-git clone https://github.com/cv-cat/xhs_dundun_reply.git
+git clone https://github.com/qhykwsw/xhs_dundun_reply.git
 cd xhs_dundun_reply
 ```
 
