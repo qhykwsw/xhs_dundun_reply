@@ -147,23 +147,3 @@ xhs_dundun_reply/
 ### 🙏 致谢
 
 本项目在开发过程中参考了 [XHS-Downloader](https://github.com/JoeanAmier/XHS-Downloader) 的 TUI 界面设计理念和项目架构，特此致谢！
-
-## 🧸 额外说明
-1. 感谢 star ⭐ 和 follow 📰！
-2. 感谢赞助！如果此项目对您有帮助，请作者喝一杯奶茶~~ （开心一整天 😊😊）
-3. Thank you~~
-
-<div align="center">
-  <img src="./static/wx_pay.png" width="400px" alt="微信赞赏码"> 
-  <img src="./static/zfb_pay.jpg" width="400px" alt="支付宝收款码">
-</div>
-
-
-## 📈 Star 趋势
-<a href="https://www.star-history.com/#cv-cat/xhs_dundun_reply&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=cv-cat/xhs_dundun_reply&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=cv-cat/xhs_dundun_reply&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=cv-cat/xhs_dundun_reply&type=Date" />
- </picture>
-</a>
